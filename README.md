@@ -19,5 +19,5 @@ Slug.
 Все поля обязательны для заполнения и уникальны.
 
 
-python manage.py load_data_csv --path data/
+python manage.py load_ingredients --path data/
 python manage.py load_data_csv /Users/mac14/Dev/foodgram-project-react/data/ingredients.csv

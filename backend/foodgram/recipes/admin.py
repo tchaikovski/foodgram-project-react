@@ -1,59 +1,67 @@
-from django.conf import settings
 from django.contrib import admin
+from recipes.models import (Cart, Favorite, Ingredient, IngredientRecipe,
+                            Recipe, Tag, TagRecipe)
 
-from recipes.models import (Favorite, Ingredient, Recipe,
-                            RecipeIngredient, ShoppingCart, Tag)
+
+class IngredientRecipeInline(admin.TabularInline):
+
+    model = IngredientRecipe
+    extra = 0
 
 
-@admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'color', 'slug')
-    search_fields = ('name', 'color', 'slug')
-    list_filter = ('name', 'color', 'slug')
-    empty_value_display = settings.EMPTY_VALUE
+class TagRecipeInline(admin.TabularInline):
+
+    model = TagRecipe
+    extra = 0
 
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'measurement_unit')
-    search_fields = ('name',)
+
+    list_display = ('name', 'measurement_unit')
+    search_fields = ('name', )
+    empty_value_display = '-пусто-'
     list_filter = ('name',)
-    empty_value_display = settings.EMPTY_VALUE
 
 
-class RecipeIngredientInline(admin.TabularInline):
-    model = RecipeIngredient
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+
+    list_display = ('name', 'color', 'slug')
+    search_fields = ('name', )
+    empty_value_display = '-пусто-'
+    list_filter = ('name',)
 
 
-@admin.register(Recipe)
-class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'author', 'favorites_amount')
-    search_fields = ('name', 'author')
-    list_filter = ('name', 'author', 'tags')
-    empty_value_display = settings.EMPTY_VALUE
-    inlines = [
-        RecipeIngredientInline,
-    ]
+@admin.register(Cart)
+class CartAdmin(admin.ModelAdmin):
 
-    def favorites_amount(self, obj):
-        return obj.favorites.count()
-
-
-@admin.register(RecipeIngredient)
-class RecipeIngredientAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'recipe', 'ingredient', 'amount')
-    empty_value_display = settings.EMPTY_VALUE
+    list_display = ('user', 'recipe', 'id')
+    search_fields = ('user', )
+    empty_value_display = '-пусто-'
+    list_filter = ('user',)
 
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'user', 'recipe')
-    search_fields = ('user', 'recipe')
-    empty_value_display = settings.EMPTY_VALUE
+
+    list_display = ('user', 'recipe')
+    search_fields = ('user', )
+    empty_value_display = '-пусто-'
+    list_filter = ('user',)
 
 
-@admin.register(ShoppingCart)
-class ShoppingCartAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'user', 'recipe')
-    search_fields = ('user', 'recipe')
-    empty_value_display = settings.EMPTY_VALUE
+@admin.register(Recipe)
+class RecipeAdmin(admin.ModelAdmin):
+
+    inlines = (IngredientRecipeInline, TagRecipeInline,)
+    list_display = ('name', 'author', 'cooking_time',
+                    'id', 'count_favorite', 'pub_date')
+    search_fields = ('name', 'author', 'tags')
+    empty_value_display = '-пусто-'
+    list_filter = ('name', 'author', 'tags')
+
+    def count_favorite(self, obj):
+
+        return Favorite.objects.filter(recipe=obj).count()
+    count_favorite.short_description = 'Число добавлении в избранное'
