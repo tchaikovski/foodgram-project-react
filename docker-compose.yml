@@ -8,7 +8,7 @@ volumes:
 services:
   db:
     container_name: foodgram-db
-    env_file: backend/.env
+    env_file: .env
     image: postgres:15.3-alpine
     restart: always
     ports:
@@ -26,7 +26,7 @@ services:
 
   backend:
     container_name: foodgram-back
-    env_file: backend/.env
+    env_file: .env
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -39,7 +39,7 @@ services:
 
   nginx:
     container_name: foodgram-nginx
-    env_file: backend/.env
+    env_file: .env
     image: nginx:1.25.1-alpine
     restart: always
     ports:
