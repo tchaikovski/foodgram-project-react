@@ -203,15 +203,16 @@ class RecipeReadSerializer(serializers.ModelSerializer):
                   'text', 'cooking_time')
 
     def get_is_favorited(self, obj):
-        user = self.context.get('request').user
+        request = self.context.get('request')
+        user = getattr(request, 'user', None)
         return user.is_authenticated and Favorite.objects.filter(
             user=user, recipe=obj
         ).exists()
 
     def get_is_in_shopping_cart(self, obj):
-        user = self.context.get('request').user
-        return user.is_authenticated and ShoppingCart.objects.filter(
-            user=user, recipe=obj
+        request = self.context.get('request')
+        return request.user.is_authenticated and ShoppingCart.objects.filter(
+            user=request.user, recipe=obj
         ).exists()
 
 
@@ -303,7 +304,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         tags_data = validated_data.pop('tags')
         ingredients_data = validated_data.pop('ingredients')
 
-        instance = super().update(instance, validated_data)
+        super().update(instance, validated_data)
 
         instance.tags.clear()
         instance.tags.add(*tags_data)
