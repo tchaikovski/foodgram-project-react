@@ -1,6 +1,4 @@
 from django.contrib.auth.models import AbstractUser
-from django.core.exceptions import ValidationError
-from django.core.validators import RegexValidator
 from django.db import models
 
 
@@ -17,16 +15,6 @@ class User(AbstractUser):
         (AUTHORIZED, 'authorized'),
         (ADMIN, 'admin'),
     ]
-    # Валидатор для проверки соответствия регулярному выражению
-    REGEX_VALIDATOR = RegexValidator(
-        regex=r'^[a-zA-Z0-9]+$',
-        message='Only alphanumeric characters are allowed.'
-    )
-
-    # Валидатор для проверки запрета на использование "me"
-    def validate_username(value):
-        if value.lower() == 'me':
-            raise ValidationError('Username can not be "me".')
 
     email = models.EmailField(
         max_length=254,
@@ -53,6 +41,12 @@ class User(AbstractUser):
         max_length=150,
         verbose_name='Password',
     )
+    role = models.CharField(
+        default='guest',
+        choices=USER_ROLES,
+        max_length=10,
+        verbose_name='User Role',
+    )
 
     @property
     def is_guest(self):
@@ -67,7 +61,7 @@ class User(AbstractUser):
         return self.role == self.ADMIN or self.is_superuser
 
     class Meta:
-        ordering = ('username', 'id',)
+        ordering = ['id']
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 

@@ -28,7 +28,6 @@ class Tag(models.Model):
         'Цвет в HEX',
         max_length=7,
         null=True,
-        unique=True,
         validators=[
             RegexValidator(
                 '^#([a-fA-F0-9]{6})',

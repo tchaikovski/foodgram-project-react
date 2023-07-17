@@ -12,7 +12,7 @@ from users.models import Subscribe, User
 
 from .filters import RecipeFilter
 from .mixins import ListRetrieveViewSet
-from .pagination import CustomPageNumberPagination
+from .pagination import CustomPaginator
 from .permissions import IsAuthorOrAdminOrReadOnly
 from .serializers import (
     IngredientSerializer,
@@ -31,7 +31,7 @@ from .serializers import (
 class UserViewSet(mixins.CreateModelMixin, ListRetrieveViewSet):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
-    pagination_class = CustomPageNumberPagination
+    pagination_class = CustomPaginator
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
@@ -59,7 +59,7 @@ class UserViewSet(mixins.CreateModelMixin, ListRetrieveViewSet):
     @action(
         detail=False, methods=['get'],
         permission_classes=(IsAuthenticated,),
-        pagination_class=CustomPageNumberPagination)
+        pagination_class=CustomPaginator)
     def subscriptions(self, request):
         queryset = User.objects.filter(subscribing__user=request.user)
         page = self.paginate_queryset(queryset)
@@ -111,7 +111,7 @@ class TagViewSet(ListRetrieveViewSet):
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
-    pagination_class = CustomPageNumberPagination
+    pagination_class = CustomPaginator
     filter_backends = (DjangoFilterBackend,)
     permission_classes = (IsAuthorOrAdminOrReadOnly,)
     filterset_class = RecipeFilter
