@@ -17,4 +17,4 @@ if [ "$IMPORT_DATA" = "True" ]; then
   /wait-for-it.sh db:5432 -- python manage.py demo_data
 fi
 
-gunicorn foodgram.wsgi:application --bind 0:8000
+gunicorn foodgram.wsgi:application --bind 0:8080
