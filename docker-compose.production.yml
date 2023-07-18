@@ -44,7 +44,7 @@ services:
       - ./docs/:/usr/share/nginx/html/api/docs/
       - static:/etc/nginx/html/static/
       - media:/etc/nginx/html/media/
-      - ./ssl:/etc/letsencrypt/live/adressayta.ru
+      - ./ssl:/etc/letsencrypt/
     depends_on:
       - backend
       - frontend
