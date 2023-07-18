@@ -8,6 +8,10 @@ volumes:
 services:
   db:
     container_name: foodgram-db
+    environment:
+      POSTGRES_PASSWORD: ${DBPASS}
+      POSTGRES_USER: ${DBUSER}
+      POSTGRES_DB: ${DBNAME}
     env_file: .env
     image: postgres:15.3-alpine
     restart: always
