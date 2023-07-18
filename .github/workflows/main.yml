@@ -121,7 +121,7 @@ jobs:
         uses: appleboy/ssh-action@master
         env:
           DOCKER_LOGIN: ${{ secrets.DOCKER_USERNAME }}
-          NGINX_PORT: 80
+          NGINX_PORT: 88
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
