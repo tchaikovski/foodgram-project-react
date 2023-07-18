@@ -25,7 +25,7 @@ class UserReadSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
-        if request and not request.user.is_anonymous:
+        if request and request.is_authenticated:
             return Subscribe.objects.filter(
                 user=request.user, author=obj).exists()
         return False
