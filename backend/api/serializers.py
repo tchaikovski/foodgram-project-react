@@ -26,8 +26,8 @@ class UserReadSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
-        return request and request.user.is_authenticated and Subscribe.objects.filter(
-            user=request.user, author=obj).exists()
+        return request and request.user.is_authenticated \
+            and Subscribe.objects.filter(user=request.user, author=obj).exists()
         # return False
 
 
@@ -155,8 +155,8 @@ class SubscribeAuthorSerializer(serializers.ModelSerializer):
     #             )
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
-        return request and request.user.is_authenticated and Subscribe.objects.filter(
-            user=request.user, author=obj).exists()
+        return request and request.user.is_authenticated and \
+            Subscribe.objects.filter(user=request.user, author=obj).exists()
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()
@@ -221,8 +221,8 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, obj):
         request = self.context.get('request')
-        return request and request.user.is_authenticated and Favorite.objects.filter(
-            user=request.user, author=obj).exists()
+        return request and request.user.is_authenticated and \
+            Favorite.objects.filter(user=request.user, author=obj).exists()
 
     # def get_is_in_shopping_cart(self, obj):
     #     user = self.context.get('request').user
@@ -231,8 +231,8 @@ class RecipeReadSerializer(serializers.ModelSerializer):
     #     ).exists()
     def get_is_favorited(self, obj):
         request = self.context.get('request')
-        return request and request.user.is_authenticated and ShoppingCart.objects.filter(
-            user=request.user, author=obj).exists()
+        return request and request.user.is_authenticated and \
+            ShoppingCart.objects.filter(user=request.user, author=obj).exists()
 
 
 class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
