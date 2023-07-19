@@ -1,4 +1,5 @@
 from django.core.validators import RegexValidator
+from django.core.validators import MinValueValidator
 from django.db import models
 from users.models import User
 
@@ -93,8 +94,9 @@ class RecipeIngredient(models.Model):
         Ingredient, on_delete=models.CASCADE, related_name='ingredients',
         verbose_name='Ингредиент'
     )
-    amount = models.IntegerField(
+    amount = models.PositiveSmallIntegerField(
         'Количество',
+        validators=[MinValueValidator(1)],
     )
 
     class Meta:

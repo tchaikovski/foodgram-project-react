@@ -1,6 +1,16 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
+
+max_length = 150
+
+
+def validate_username(value):
+    if value.lower() == 'me':
+        raise ValidationError('Username can not be "me".')
+    else:
+        return value
 
 
 class User(AbstractUser):
@@ -18,9 +28,9 @@ class User(AbstractUser):
     ]
 
     # Валидатор для проверки запрета на использование "me"
-    def validate_username(value):
-        if value.lower() == 'me':
-            raise ValidationError('Username can not be "me".')
+    # def validate_username(value):
+    #     if value.lower() == 'me':
+    #         raise ValidationError('Username can not be "me".')
 
     email = models.EmailField(
         max_length=254,
@@ -29,22 +39,23 @@ class User(AbstractUser):
     )
     username = models.CharField(
         blank=False,
-        max_length=150,
+        max_length=max_length,
         unique=True,
         verbose_name='Username',
+        validators=[UnicodeUsernameValidator(), validate_username],
     )
     first_name = models.CharField(
         blank=False,
-        max_length=150,
+        max_length=max_length,
         verbose_name='First Name',
     )
     last_name = models.CharField(
         blank=False,
-        max_length=150,
+        max_length=max_length,
         verbose_name='Last Name',
     )
     password = models.CharField(
-        max_length=150,
+        max_length=max_length,
         verbose_name='Password',
     )
 
@@ -61,7 +72,7 @@ class User(AbstractUser):
         return self.role == self.ADMIN or self.is_superuser
 
     class Meta:
-        ordering = ('id',)
+        ordering = ('username', 'email')
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
