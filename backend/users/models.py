@@ -7,9 +7,6 @@ from .validators import validate_username
 max_length = 150
 
 
-
-
-
 class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ('username', 'first_name', 'last_name', 'password')
