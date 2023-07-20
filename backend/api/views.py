@@ -79,12 +79,6 @@ class UserViewSet(mixins.CreateModelMixin, ListRetrieveViewSet):
                 author, data=request.data, context={"request": request}
             )
             serializer.save()
-            _, created = Subscribe.objects.create(
-                user=request.user, author=author
-            )
-            if created:
-                return Response(
-                    serializer.data, status=status.HTTP_201_CREATED)
             return Response(
                 "Subscribe already exists", status=status.HTTP_200_OK)
 
