@@ -26,9 +26,10 @@ class UserReadSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
-        return request and request.user.is_authenticated and \
-            Subscribe.objects.filter(user=request.user, author=obj).exists()
-        # return False
+        return (request
+                and request.user.is_authenticated
+                and Subscribe.objects.filter(user=request.user,
+                                             author=obj).exists())
 
 
 class UserCreateSerializer(UserCreateSerializer):
@@ -101,18 +102,11 @@ class SubscriptionsSerializer(serializers.ModelSerializer):
                   'first_name', 'last_name', 'recipes',
                   'recipes_count', 'is_subscribed')
 
-    # def get_is_subscribed(self, obj):
-    #     user = self.context.get('request').user
-    #     return user.is_authenticated and user.subscriber.filter(
-    #         user=user, author=obj
-    #     ).exists()
-
     def get_is_subscribed(self, obj):
-        if (self.context.get('request')
-                and self.context['request'].user.is_authenticated):
-            return Subscribe.objects.filter(user=self.context['request'].user,
-                                            author=obj).exists()
-        return False
+        request = self.context.get('request')
+        return (request and request.user.is_authenticated
+                and Subscribe.objects.filter(user=request.user,
+                                             author=obj).exists())
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()
@@ -147,16 +141,11 @@ class SubscribeAuthorSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'errors': 'Ошибка подписки.'})
         return obj
 
-    # def get_is_subscribed(self, obj):
-    #     return (self.context.get('request').user.is_authenticated
-    #             and Subscribe.objects.filter(
-    #                 user=self.context['request'].user,
-    #                 author=obj).exists()
-    #             )
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
-        return request and request.user.is_authenticated and \
-            Subscribe.objects.filter(user=request.user, author=obj).exists()
+        return (request and request.user.is_authenticated
+                and Subscribe.objects.filter(user=request.user,
+                                             author=obj).exists())
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()
@@ -213,26 +202,17 @@ class RecipeReadSerializer(serializers.ModelSerializer):
                   'name', 'image',
                   'text', 'cooking_time')
 
-    # def get_is_favorited(self, obj):
-    #     user = self.context.get('request').user
-    #     return user.is_authenticated and Favorite.objects.filter(
-    #         user=user, recipe=obj
-    #     ).exists()
-
     def get_is_favorited(self, obj):
         request = self.context.get('request')
-        return request and request.user.is_authenticated and \
-            Favorite.objects.filter(user=request.user, author=obj).exists()
+        return (request and request.user.is_authenticated
+                and Favorite.objects.filter(user=request.user,
+                                            recipe=obj).exists())
 
-    # def get_is_in_shopping_cart(self, obj):
-    #     user = self.context.get('request').user
-    #     return user.is_authenticated and ShoppingCart.objects.filter(
-    #         user=user, recipe=obj
-    #     ).exists()
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
-        return request and request.user.is_authenticated and \
-            ShoppingCart.objects.filter(user=request.user, author=obj).exists()
+        return (request and request.user.is_authenticated
+                and ShoppingCart.objects.filter(user=request.user,
+                                                recipe=obj).exists())
 
 
 class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
@@ -297,12 +277,8 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Нужно указать минимум 1 ингредиент.')
 
-        # ingredient_ids = [item['id'] for item in attrs.get('ingredients')]
-        # if len(ingredient_ids) != len(set(ingredient_ids)):
-        #     raise serializers.ValidationError(
-        #         'Ингредиенты должны быть уникальны.')
-
-        if len(attrs.get('ingredients')) != len(set(attrs.get('ingredients'))):
+        ingredient_ids = [item['id'] for item in attrs.get('ingredients')]
+        if len(ingredient_ids) != len(set(ingredient_ids)):
             raise serializers.ValidationError(
                 'Ингредиенты должны быть уникальны.')
 

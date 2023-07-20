@@ -1,16 +1,13 @@
 from django.contrib.auth.models import AbstractUser
-from django.core.exceptions import ValidationError
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
+
+from .validators import validate_username
 
 max_length = 150
 
 
-def validate_username(value):
-    if value.lower() == 'me':
-        raise ValidationError('Username can not be "me".')
-    else:
-        return value
+
 
 
 class User(AbstractUser):

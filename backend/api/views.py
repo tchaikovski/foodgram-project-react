@@ -78,7 +78,7 @@ class UserViewSet(mixins.CreateModelMixin, ListRetrieveViewSet):
             serializer = SubscribeAuthorSerializer(
                 author, data=request.data, context={"request": request}
             )
-            serializer.is_valid(raise_exception=True)
+            serializer.save()
             _, created = Subscribe.objects.create(
                 user=request.user, author=author
             )
