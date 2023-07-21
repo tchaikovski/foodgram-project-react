@@ -78,14 +78,23 @@ class UserViewSet(mixins.CreateModelMixin, ListRetrieveViewSet):
             serializer = SubscribeAuthorSerializer(
                 author, data=request.data, context={"request": request}
             )
-            serializer.save()
+            serializer.is_valid(raise_exception=True)
+            _, created = Subscribe.objects.create(
+                user=request.user, author=author
+            )
+            if created:
+                return Response(
+                    serializer.data, status=status.HTTP_201_CREATED)
             return Response(
                 "Subscribe already exists", status=status.HTTP_200_OK)
 
-        get_object_or_404(Subscribe, user=request.user, author=author).delete()
+        subscription = get_object_or_404(Subscribe, user=request.user,
+                                         author=author)
+        subscription.delete()
         return Response(
             {'detail': 'Успешная отписка'},
-            status=status.HTTP_204_NO_CONTENT)
+            status=status.HTTP_204_NO_CONTENT
+        )
 
 
 class IngredientViewSet(ListRetrieveViewSet):
