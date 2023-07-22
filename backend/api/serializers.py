@@ -123,12 +123,7 @@ class SubscriptionsSerializer(serializers.ModelSerializer):
 
 class SubscribeAuthorSerializer(serializers.ModelSerializer):
     """[POST, DELETE] Подписка на автора и отписка."""
-    email = serializers.ReadOnlyField(source='author.email')
-    id = serializers.ReadOnlyField(source='author.id')
-    username = serializers.ReadOnlyField(source='author.username')
     is_subscribed = serializers.SerializerMethodField()
-    first_name = serializers.ReadOnlyField(source='author.first_name')
-    last_name = serializers.ReadOnlyField(source='author.last_name')
     recipes = RecipeSerializer(many=True, read_only=True)
     recipes_count = serializers.SerializerMethodField()
 
