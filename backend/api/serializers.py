@@ -126,15 +126,17 @@ class SubscribeAuthorSerializer(serializers.ModelSerializer):
     email = serializers.ReadOnlyField(source='author.email')
     id = serializers.ReadOnlyField(source='author.id')
     username = serializers.ReadOnlyField(source='author.username')
+    is_subscribed = serializers.SerializerMethodField()
     first_name = serializers.ReadOnlyField(source='author.first_name')
     last_name = serializers.ReadOnlyField(source='author.last_name')
+
     recipes = RecipeSerializer(many=True, read_only=True)
     recipes_count = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('email', 'id', 'username',
-                  'first_name', 'last_name', 'recipes', 'recipes_count')
+        fields = ('email', 'id', 'username', 'first_name', 'last_name',
+                  'recipes', 'recipes_count', 'is_subscribed',)
 
     def validate(self, obj):
         if (self.context['request'].user == obj):
