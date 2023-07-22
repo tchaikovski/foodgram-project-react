@@ -8,8 +8,8 @@ from rest_framework import filters, mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from users.models import Subscribe, User
 
+from users.models import Subscribe, User
 from .filters import RecipeFilter
 from .mixins import ListRetrieveViewSet
 from .pagination import CustomPaginator
@@ -76,9 +76,8 @@ class UserViewSet(mixins.CreateModelMixin, ListRetrieveViewSet):
 
         if request.method == 'POST':
             serializer = SubscribeAuthorSerializer(
-                author, data=request.data, context={"request": request}
+                author, data=request, context={"request": request}
             )
-            serializer.is_valid(raise_exception=True)
             _, created = Subscribe.objects.get_or_create(
                 user=request.user, author=author
             )
