@@ -76,7 +76,7 @@ class UserViewSet(mixins.CreateModelMixin, ListRetrieveViewSet):
 
         if request.method == 'POST':
             serializer = SubscribeAuthorSerializer(
-                author, context={"request": request}
+                author, data=request, context={"request": request}
             )
             _, created = Subscribe.objects.get_or_create(
                 user=request.user, author=author
